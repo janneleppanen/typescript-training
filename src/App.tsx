@@ -3,8 +3,13 @@ import "antd/dist/antd.css";
 import { connect } from "react-redux";
 import { Layout, List, Checkbox, Button, Input } from "antd";
 
-import { addTask, removeTask, toggleTask } from "./Redux/TasksReducer";
-
+import {
+  addTask,
+  removeTask,
+  toggleTask,
+  setTasks
+} from "./Redux/TasksReducer";
+import SortableList from "./components/SortableList";
 const { Content } = Layout;
 
 interface State {
@@ -16,6 +21,7 @@ interface Props {
   addTask(name: string): any;
   removeTask(name: string): any;
   toggleTask(name: string): any;
+  setTasks(items: Array<Task>): any;
 }
 
 class App extends React.Component<Props, State> {
@@ -24,9 +30,6 @@ class App extends React.Component<Props, State> {
   };
 
   public render() {
-    const tasks = this.props.tasks.filter((task: Task) => !task.done);
-    const archivedTasks = this.props.tasks.filter((task: Task) => task.done);
-
     return (
       <Content style={{ padding: "1rem", maxWidth: "600px", margin: "0 auto" }}>
         <h1>Todo App</h1>
@@ -46,31 +49,38 @@ class App extends React.Component<Props, State> {
             Add task
           </Button>
         </form>
-
-        {this.renderList("Tasks", tasks)}
-        {this.renderList("Done", archivedTasks)}
+        {this.renderList("Tasks", this.props.tasks, (item: Task) => {
+          return !item.done;
+        })}
+        {this.renderList(
+          "Archived Tasks",
+          this.props.tasks,
+          (item: Task) => item.done
+        )}
       </Content>
     );
   }
 
-  renderList = (title: string, tasks: Array<Task>) => {
+  renderList = (title: string, tasks: Array<Task>, isItemVisible: any) => {
     if (tasks.length === 0) return null;
 
     return (
       <React.Fragment>
         <h2>{title}</h2>
-        <List
-          size="small"
-          dataSource={tasks}
-          renderItem={(task: Task) => (
+
+        <SortableList
+          items={tasks}
+          onChange={(items: Array<Task>) => this.props.setTasks(items)}
+          isItemVisible={isItemVisible}
+          renderListItem={(item: Task) => (
             <List.Item>
               <label style={{ width: "100%" }}>
                 <Checkbox
-                  onChange={() => this.onTaskCheck(task)}
-                  checked={task.done}
+                  onChange={() => this.onTaskCheck(item)}
+                  checked={item.done}
                   style={{ marginRight: ".5rem" }}
                 />
-                {task.name}
+                {item.name}
               </label>
             </List.Item>
           )}
@@ -102,5 +112,5 @@ const mapStateToProps = (state: GlobalState) => {
 
 export default connect(
   mapStateToProps,
-  { addTask, removeTask, toggleTask }
+  { addTask, removeTask, toggleTask, setTasks }
 )(App);

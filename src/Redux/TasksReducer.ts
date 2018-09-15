@@ -3,6 +3,7 @@ import { createActions, handleActions } from "redux-actions";
 export const ADD_TASK = "ADD_TASK";
 export const REMOVE_TASK = "REMOVE_TASK";
 export const TOGGLE_TASK = "TOGGLE_TASK";
+export const SET_TASKS = "SET_TASKS";
 
 const STATE: Array<Task> = [
   { name: "Read a book", done: false },
@@ -14,10 +15,11 @@ interface basicAction {
   payload: string;
 }
 
-export const { addTask, removeTask, toggleTask } = createActions({
-  ADD_TASK: (taskName: string) => taskName,
-  REMOVE_TASK: (taskName: string) => taskName,
-  [TOGGLE_TASK]: (taskName: string) => taskName
+export const { addTask, removeTask, toggleTask, setTasks } = createActions({
+  [ADD_TASK]: (taskName: string) => taskName,
+  [REMOVE_TASK]: (taskName: string) => taskName,
+  [TOGGLE_TASK]: (taskName: string) => taskName,
+  [SET_TASKS]: (tasks: Array<Task>) => tasks
 });
 
 export const TasksReducer = handleActions(
@@ -36,6 +38,9 @@ export const TasksReducer = handleActions(
         }
         return task;
       });
+    },
+    [SET_TASKS]: (state: Array<Task>, action: any) => {
+      return [...action.payload];
     }
   },
   STATE
