@@ -10,14 +10,18 @@ import {
 } from "react-beautiful-dnd";
 import { List } from "antd";
 
-interface Props {
-  items: Array<Task>;
-  onChange(items: Array<Task>): any;
-  renderListItem(item: Task): any;
-  isItemVisible(item: Task): any;
+interface Item {
+  name: string;
 }
 
-const reorder = (list: Array<Task>, startIndex: number, endIndex: number) => {
+interface Props {
+  items: Array<Item>;
+  onChange(items: Array<Item>): any;
+  renderListItem(item: Item): any;
+  isItemVisible(item: Item): any;
+}
+
+const reorder = (list: Array<Item>, startIndex: number, endIndex: number) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
@@ -59,7 +63,7 @@ class DragDrop extends React.Component<Props, {}> {
     );
   }
 
-  renderListItem = (item: Task, index: number) => {
+  renderListItem = (item: Item, index: number) => {
     if (!this.props.isItemVisible(item)) return <div />;
 
     return (
