@@ -24,11 +24,11 @@ export const { addTask, removeTask, toggleTask, setTasks } = createActions({
 
 export const TasksReducer = handleActions(
   {
-    [addTask.toString()]: (state: Array<Task>, action: basicAction) => {
+    [ADD_TASK]: (state: Array<Task>, action: basicAction) => {
       const newTask = { name: action.payload, done: false };
       return [...state, newTask];
     },
-    [removeTask.toString()]: (state: Array<Task>, action: basicAction) => {
+    [REMOVE_TASK]: (state: Array<Task>, action: basicAction) => {
       return state.filter((task: Task) => task.name !== action.payload);
     },
     [TOGGLE_TASK]: (state: Array<Task>, action: basicAction) => {

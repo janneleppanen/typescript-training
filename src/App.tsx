@@ -9,7 +9,7 @@ import {
   toggleTask,
   setTasks
 } from "./Redux/TasksReducer";
-import SortableList from "./components/SortableList";
+import SortableList from "./common/SortableList";
 const { Content } = Layout;
 
 interface State {
